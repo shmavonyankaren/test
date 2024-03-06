@@ -44,10 +44,8 @@ export async function POST(req: Request) {
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
     }) as WebhookEvent;
-    console.log("Done");
   } catch (err) {
-    console.log("err");
-    console.error("Error verifying webhook :", err);
+    console.error("Error verifying webhook:", err);
     return new Response("Error occured", {
       status: 400,
     });
@@ -69,7 +67,6 @@ export async function POST(req: Request) {
       lastName: last_name,
       photo: image_url,
     };
-    console.log(user);
 
     const newUser = await createUser(user);
 
@@ -80,7 +77,7 @@ export async function POST(req: Request) {
         },
       });
     }
-    return NextResponse.json({ message: "Received", user: newUser });
+    return new Response("", { status: 200 });
   }
 
   if (eventType === "user.updated") {
@@ -96,7 +93,7 @@ export async function POST(req: Request) {
 
     const updatedUser = await updateUser(id, user);
 
-    return NextResponse.json({ message: "OK", user: updatedUser });
+    return new Response("", { status: 200 });
   }
 
   if (eventType === "user.deleted") {
@@ -105,7 +102,7 @@ export async function POST(req: Request) {
 
     const deletedUser = await deleteUser(id!);
 
-    return NextResponse.json({ message: "OK", user: deletedUser });
+    return new Response("", { status: 200 });
   }
 
   return new Response("", { status: 200 });
