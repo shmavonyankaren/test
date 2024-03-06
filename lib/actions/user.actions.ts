@@ -14,10 +14,27 @@ export async function createUser(user: CreateUserParams) {
   try {
     await connectToDatabase();
 
-    const newUser = await User.create({ user: "user" });
+    const newUser = await User.create(user);
 
-    await newUser.save();
+    newUser.save();
     return JSON.parse(JSON.stringify(newUser));
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+export async function createOrUpdataUser(
+  clerkId: string,
+  user: UpdateUserParams
+) {
+  try {
+    await connectToDatabase();
+    const newUser = await User.findOneAndUpdate(
+      { clerkId },
+      { $set: user },
+      { upsert: true, new: true }
+    );
+    newUser.save();
   } catch (error) {
     handleError(error);
   }
